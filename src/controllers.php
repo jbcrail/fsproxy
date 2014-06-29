@@ -32,7 +32,7 @@ $app->get('/', function () use ($app) {
 $app->get('/fs', function (Request $request) use ($app, $adapters) {
   $accept = AcceptHeader::fromString($request->headers->get('Accept'));
   if ($accept->has('text/html')) {
-    return $app['twig']->render('fs.html', array('adapters' => $adapters));
+    return $app['twig']->render('index.html', array('adapters' => $adapters));
   }
   else if ($accept->has('application/json')) {
     return $app->json(array_keys($adapters));

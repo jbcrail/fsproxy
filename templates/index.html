@@ -1,5 +1,18 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    Welcome to your new Silex Application!
+<table class="table">
+<thead>
+<tr>
+  <th>Site</th>
+</tr>
+</thead>
+<tbody>
+{% for key in adapters|keys %}
+<tr>
+  <td><a href="/fs/{{ key|e }}">{{ key|e }}</a></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
 {% endblock %}
