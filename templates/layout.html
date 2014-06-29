@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{% block title '' %}</title>
+    <title>{{ title }}</title>
 
     <link href="{{ app.request.basepath }}/assets/bootstrap-default/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="{{ app.request.basepath }}/assets/bootstrap-default/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
@@ -18,7 +18,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">fsproxy</a>
+          <a class="navbar-brand" href="/">{{ title }}</a>
         </div>
       </div>
     </div>

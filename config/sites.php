@@ -4,7 +4,8 @@ use League\Flysystem\Adapter\Ftp as FtpAdapter;
 use League\Flysystem\Adapter\Local as LocalAdapter;
 
 return array(
-  'sites' => array(
+  'proxy.title' => 'fsproxy',
+  'proxy.sites' => array(
     'local' => new LocalAdapter('.'),
 
     'remote' => new FtpAdapter(array(

@@ -9,11 +9,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use League\Flysystem\Filesystem;
 
 $app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app) {
-  if (!isset($app['sites'][$site])) {
+  if (!isset($app['proxy.sites'][$site])) {
     $app->abort(404, "Site $site does not exist.");
   }
 
-  $fs = new Filesystem($app['sites'][$site]);
+  $fs = new Filesystem($app['proxy.sites'][$site]);
   $info = $fs->getMetadata($url);
   if ($info['type'] === 'file') {
     return $fs->read($url);
@@ -28,7 +28,7 @@ $app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app
 
   $accept = AcceptHeader::fromString($request->headers->get('Accept'));
   if ($accept->has('text/html')) {
-    return $app['twig']->render('listing.html', array('site' => $site, 'files' => $files));
+    return $app['twig']->render('listing.html', array('title' => $app['proxy.title'], 'site' => $site, 'files' => $files));
   }
   else if ($accept->has('application/json')) {
     return $app->json($files);
@@ -39,11 +39,11 @@ $app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app
 })->assert('url', '.*');
 
 $app->get('/fs/{site}', function (Request $request, $site) use ($app) {
-  if (!isset($app['sites'][$site])) {
+  if (!isset($app['proxy.sites'][$site])) {
     $app->abort(404, "Site $site does not exist.");
   }
 
-  $fs = new Filesystem($app['sites'][$site]);
+  $fs = new Filesystem($app['proxy.sites'][$site]);
   $files = $fs->listContents();
   foreach ($files as $k => $v) {
     if (isset($v['timestamp'])) {
@@ -53,7 +53,7 @@ $app->get('/fs/{site}', function (Request $request, $site) use ($app) {
 
   $accept = AcceptHeader::fromString($request->headers->get('Accept'));
   if ($accept->has('text/html')) {
-    return $app['twig']->render('listing.html', array('site' => $site, 'files' => $files));
+    return $app['twig']->render('listing.html', array('title' => $app['proxy.title'], 'site' => $site, 'files' => $files));
   }
   else if ($accept->has('application/json')) {
     return $app->json($files);
@@ -66,10 +66,10 @@ $app->get('/fs/{site}', function (Request $request, $site) use ($app) {
 $app->get('/fs', function (Request $request) use ($app) {
   $accept = AcceptHeader::fromString($request->headers->get('Accept'));
   if ($accept->has('text/html')) {
-    return $app['twig']->render('index.html', array('adapters' => $app['sites']));
+    return $app['twig']->render('index.html', array('title' => $app['proxy.title'], 'sites' => $app['proxy.sites']));
   }
   else if ($accept->has('application/json')) {
-    return $app->json(array_keys($app['sites']));
+    return $app->json(array_keys($app['proxy.sites']));
   }
   else {
     $app->abort(404, "Unsupported accept header");
