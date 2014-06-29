@@ -25,8 +25,59 @@ $adapters = array(
   )),
 );
 
-$app->get('/', function () use ($app) {
-  return $app->redirect('/fs');
+$app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app, $adapters) {
+  if (!isset($adapters[$site])) {
+    $app->abort(404, "Site $site does not exist.");
+  }
+
+  $fs = new Filesystem($adapters[$site]);
+  $info = $fs->getMetadata($url);
+  if ($info['type'] === 'file') {
+    return $fs->read($url);
+  }
+
+  $files = $fs->listContents($url);
+  foreach ($files as $k => $v) {
+    if (isset($v['timestamp'])) {
+      $files[$k]['timestamp'] = date("d-M-Y H:i", $v['timestamp']);
+    }
+  }
+
+  $accept = AcceptHeader::fromString($request->headers->get('Accept'));
+  if ($accept->has('text/html')) {
+    return $app['twig']->render('listing.html', array('site' => $site, 'files' => $files));
+  }
+  else if ($accept->has('application/json')) {
+    return $app->json($files);
+  }
+  else {
+    $app->abort(404, "Unsupported accept header");
+  }
+})->assert('url', '.*');
+
+$app->get('/fs/{site}', function (Request $request, $site) use ($app, $adapters) {
+  if (!isset($adapters[$site])) {
+    $app->abort(404, "Site $site does not exist.");
+  }
+
+  $fs = new Filesystem($adapters[$site]);
+  $files = $fs->listContents();
+  foreach ($files as $k => $v) {
+    if (isset($v['timestamp'])) {
+      $files[$k]['timestamp'] = date("d-M-Y H:i", $v['timestamp']);
+    }
+  }
+
+  $accept = AcceptHeader::fromString($request->headers->get('Accept'));
+  if ($accept->has('text/html')) {
+    return $app['twig']->render('listing.html', array('site' => $site, 'files' => $files));
+  }
+  else if ($accept->has('application/json')) {
+    return $app->json($files);
+  }
+  else {
+    $app->abort(404, "Unsupported accept header");
+  }
 });
 
 $app->get('/fs', function (Request $request) use ($app, $adapters) {
@@ -42,32 +93,8 @@ $app->get('/fs', function (Request $request) use ($app, $adapters) {
   }
 });
 
-$app->get('/fs/{site}', function (Request $request, $site) use ($app, $adapters) {
-  if (!isset($adapters[$site])) {
-    $app->abort(404, "Site $site does not exist.");
-  }
-
-  $fs = new Filesystem($adapters[$site]);
-
-  $accept = AcceptHeader::fromString($request->headers->get('Accept'));
-  if ($accept->has('text/html')) {
-    return $app['twig']->render('listing.html', array('site' => $site, 'files' => $fs->listContents()));
-  }
-  else if ($accept->has('application/json')) {
-    return $app->json($fs->listContents());
-  }
-  else {
-    $app->abort(404, "Unsupported accept header");
-  }
-});
-
-$app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app, $adapters) {
-  if (!isset($adapters[$site])) {
-    $app->abort(404, "Site $site does not exist.");
-  }
-
-  $fs = new Filesystem($adapters[$site]);
-  return $fs->read($url);
+$app->get('/', function () use ($app) {
+  return $app->redirect('/fs');
 });
 
 $app->error(function (\Exception $e, $code) use ($app) {
