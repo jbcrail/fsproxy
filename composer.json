@@ -3,10 +3,12 @@
   "description": "A proxy for filesystems complete with HTML interface and Restful API.",
   "type": "project",
   "require": {
-    "php": ">=5.4.0",
-    "silex/silex": ">=1.2.0",
+    "php": ">=5.4",
+    "silex/silex": ">=1.2",
     "twig/twig": "1.*",
+    "symfony/yaml": ">=2.5",
     "league/flysystem": "0.2.*",
+    "igorw/config-service-provider": ">=1.2",
     "components/jquery": "1.11.*",
     "components/bootstrap-default": "3.1.*"
   },

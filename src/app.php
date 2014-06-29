@@ -11,6 +11,7 @@ $app->register(new UrlGeneratorServiceProvider());
 $app->register(new ValidatorServiceProvider());
 $app->register(new ServiceControllerServiceProvider());
 $app->register(new TwigServiceProvider());
+$app->register(new Igorw\Silex\ConfigServiceProvider(__DIR__."/../config/sites.php"));
 
 $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
   return $twig;

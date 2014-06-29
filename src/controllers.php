@@ -7,30 +7,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Ftp as FtpAdapter;
-use League\Flysystem\Adapter\Local as LocalAdapter;
 
-$adapters = array(
-  'local' => new LocalAdapter('.'),
-
-  'remote' => new FtpAdapter(array(
-    'host' => 'test.talia.net',
-    'username' => 'anonymous',
-    'password' => 'ignore@me.com',
-    'port' => 21,
-    'root' => '.',
-    'passive' => true,
-    'ssl' => false,
-    'timeout' => 30,
-  )),
-);
-
-$app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app, $adapters) {
-  if (!isset($adapters[$site])) {
+$app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app) {
+  if (!isset($app['sites'][$site])) {
     $app->abort(404, "Site $site does not exist.");
   }
 
-  $fs = new Filesystem($adapters[$site]);
+  $fs = new Filesystem($app['sites'][$site]);
   $info = $fs->getMetadata($url);
   if ($info['type'] === 'file') {
     return $fs->read($url);
@@ -55,12 +38,12 @@ $app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app
   }
 })->assert('url', '.*');
 
-$app->get('/fs/{site}', function (Request $request, $site) use ($app, $adapters) {
-  if (!isset($adapters[$site])) {
+$app->get('/fs/{site}', function (Request $request, $site) use ($app) {
+  if (!isset($app['sites'][$site])) {
     $app->abort(404, "Site $site does not exist.");
   }
 
-  $fs = new Filesystem($adapters[$site]);
+  $fs = new Filesystem($app['sites'][$site]);
   $files = $fs->listContents();
   foreach ($files as $k => $v) {
     if (isset($v['timestamp'])) {
@@ -80,13 +63,13 @@ $app->get('/fs/{site}', function (Request $request, $site) use ($app, $adapters)
   }
 });
 
-$app->get('/fs', function (Request $request) use ($app, $adapters) {
+$app->get('/fs', function (Request $request) use ($app) {
   $accept = AcceptHeader::fromString($request->headers->get('Accept'));
   if ($accept->has('text/html')) {
-    return $app['twig']->render('index.html', array('adapters' => $adapters));
+    return $app['twig']->render('index.html', array('adapters' => $app['sites']));
   }
   else if ($accept->has('application/json')) {
-    return $app->json(array_keys($adapters));
+    return $app->json(array_keys($app['sites']));
   }
   else {
     $app->abort(404, "Unsupported accept header");
