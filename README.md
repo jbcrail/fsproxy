@@ -7,12 +7,12 @@ numerous filesystems behind a single interface.
 
 1. Install dependencies:
 
-  $ curl -sS https://getcomposer.org/installer | php
-  $ php composer.phar update
+        $ curl -sS https://getcomposer.org/installer | php
+        $ php composer.phar update
 
 2. Start web server:
 
-  $ bin/serve
+        $ bin/serve
 
 3. Go to `http://localhost:8080/`
 
