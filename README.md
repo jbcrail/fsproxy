@@ -3,6 +3,9 @@
 fsproxy is a RESTful filesystem proxy designed to centralize access to
 numerous filesystems behind a single interface.
 
+This was developed as a proof-of-concept and should not be used on a
+publicly-accessible server.
+
 ## Quick Start
 
 1. Install dependencies:
