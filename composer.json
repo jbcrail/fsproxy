@@ -1,0 +1,16 @@
+{
+  "name": "jbcrail/fsproxy",
+  "description": "A proxy for filesystems complete with HTML interface and Restful API.",
+  "type": "project",
+  "require": {
+    "php": ">=5.4.0",
+    "silex/silex": ">=1.2.0",
+    "twig/twig": "1.*",
+    "league/flysystem": "0.2.*",
+    "components/jquery": "1.11.0",
+    "twbs/bootstrap": "v3.2.0"
+  },
+  "autoload": {
+    "psr-0": { "": "src/" }
+  }
+}
