@@ -20,3 +20,13 @@ publicly-accessible server.
 3. Go to `http://localhost:8080/`
 
 4. Enjoy!
+
+## TODO
+
+* Add flag to disable HTML interface.
+* Add API token authentication.
+* Cache directory listings to minimize roundtrips.
+* Add connection pools.
+* Sort directory listing via Javascript.
+* Add navigation to parent directories.
+* Add stream support for large files.
