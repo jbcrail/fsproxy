@@ -6,8 +6,8 @@
 <tr>
   <th>Site</th>
   <th>Name</th>
-  <th>Last Modified</th>
   <th class="text-right">Size</th>
+  <th class="text-right">Last Modified</th>
 </tr>
 </thead>
 <tbody>
@@ -19,8 +19,8 @@
   {% else %}
   <td><a href="/fs/{{ site|e }}/{{ file.path|e }}">{{ file.basename|e }}</a></td>
   {% endif %}
-  <td>{{ file.timestamp|default('') }}</td>
   <td class="text-right">{{ file.size|default('') }}</td>
+  <td class="text-right">{{ file.timestamp|default('') }}</td>
 </tr>
 {% endfor %}
 </tbody>
