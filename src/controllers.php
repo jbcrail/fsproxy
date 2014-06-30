@@ -16,7 +16,7 @@ $app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app
   $fs = new Filesystem($app['proxy.sites'][$site]);
   $info = $fs->getMetadata($url);
   if ($info['type'] === 'file') {
-    return $fs->read($url);
+    return new Response($fs->read($url), 200, array('Content-Type' => $fs->getMimetype($url)));
   }
 
   $files = $fs->listContents($url);
