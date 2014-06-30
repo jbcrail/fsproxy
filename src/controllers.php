@@ -14,6 +14,15 @@ $app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app
   }
 
   $fs = new Filesystem($app['proxy.sites'][$site]);
+
+  /*
+   * FIXME: Workaround for Flysystem's inability to get a directory's
+   * metadata without retrieving the listing first. I get the listing
+   * twice, and this needs to be simplified.
+   */
+  $dir = dirname($url);
+  $fs->listContents($dir === '.' ? '' : $dir);
+
   $info = $fs->getMetadata($url);
   if ($info['type'] === 'file') {
     return new Response($fs->read($url), 200, array('Content-Type' => $fs->getMimetype($url)));
