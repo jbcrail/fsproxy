@@ -28,5 +28,5 @@ publicly-accessible server.
 * Cache directory listings to minimize roundtrips.
 * Add connection pools.
 * Sort directory listing via Javascript.
-* Add navigation to parent directories.
 * Add stream support for large files.
+* Normalize directory listing across all adapters (filter/sort).
