@@ -15,7 +15,6 @@
 <table class="table table-condensed table-hover">
 <thead>
 <tr>
-  <th>Site</th>
   <th>Name</th>
   <th class="text-right">Size</th>
   <th class="text-right">Last Modified</th>
@@ -24,7 +23,6 @@
 <tbody>
 {% for file in files %}
 <tr>
-  <td>{{ site|e }}</td>
   {% if file.type == 'dir' %}
   <td><a href="/fs/{{ site|e }}/{{ file.path|e }}">{{ file.basename|e }}/</a></td>
   {% else %}
