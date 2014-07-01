@@ -37,7 +37,7 @@ $app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app
 
   $accept = AcceptHeader::fromString($request->headers->get('Accept'));
   if ($accept->has('text/html')) {
-    return $app['twig']->render('listing.html', array('title' => $app['proxy.title'], 'site' => $site, 'files' => $files));
+    return $app['twig']->render('listing.html', array('title' => $app['proxy.title'], 'site' => $site, 'path' => $url, 'files' => $files));
   }
   else if ($accept->has('application/json')) {
     return $app->json($files);
@@ -62,7 +62,7 @@ $app->get('/fs/{site}', function (Request $request, $site) use ($app) {
 
   $accept = AcceptHeader::fromString($request->headers->get('Accept'));
   if ($accept->has('text/html')) {
-    return $app['twig']->render('listing.html', array('title' => $app['proxy.title'], 'site' => $site, 'files' => $files));
+    return $app['twig']->render('listing.html', array('title' => $app['proxy.title'], 'site' => $site, 'path' => '', 'files' => $files));
   }
   else if ($accept->has('application/json')) {
     return $app->json($files);
