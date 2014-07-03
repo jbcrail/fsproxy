@@ -10,7 +10,7 @@
 <tbody>
 {% for key in sites|keys %}
 <tr>
-  <td><a href="/fs/{{ key|e }}">{{ key|e }}</a></td>
+  <td><a href="/{{ key|e }}">{{ key|e }}</a></td>
 </tr>
 {% endfor %}
 </tbody>

@@ -2,12 +2,12 @@
 
 {% block content %}
 <ol class="breadcrumb">
-  <li><a href="/fs">sites</a></li>
-  <li><a href="/fs/{{ site|e }}">{{ site| e }}</a></li>
+  <li><a href="/">Home</a></li>
+  <li><a href="/{{ site|e }}">{{ site| e }}</a></li>
   {% set dirs = path|split('/') %}
   {% if dirs[0] is not empty %}
   {% for i in 0..dirs|length-1 %}
-  <li><a href="/fs/{{ site|e }}/{{ dirs|slice(0,i+1)|join('/') }}">{{ dirs|slice(i,1)|join }}</a></li>
+  <li><a href="/{{ site|e }}/{{ dirs|slice(0,i+1)|join('/') }}">{{ dirs|slice(i,1)|join }}</a></li>
   {% endfor %}
   {% endif %}
 </ol>
@@ -24,9 +24,9 @@
 {% for file in files %}
 <tr>
   {% if file.type == 'dir' %}
-  <td><a href="/fs/{{ site|e }}/{{ file.path|e }}">{{ file.basename|e }}/</a></td>
+  <td><a href="/{{ site|e }}/{{ file.path|e }}">{{ file.basename|e }}/</a></td>
   {% else %}
-  <td><a href="/fs/{{ site|e }}/{{ file.path|e }}">{{ file.basename|e }}</a></td>
+  <td><a href="/{{ site|e }}/{{ file.path|e }}">{{ file.basename|e }}</a></td>
   {% endif %}
   <td class="text-right">{{ file.size|default('') }}</td>
   <td class="text-right">{{ file.timestamp|default('') }}</td>

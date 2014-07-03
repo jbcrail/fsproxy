@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use League\Flysystem\Filesystem;
 
-$app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app) {
+$app->get('/{site}/{url}', function (Request $request, $site, $url) use ($app) {
   if (!isset($app['proxy.sites'][$site])) {
     $app->abort(404, "Site $site does not exist.");
   }
@@ -47,7 +47,7 @@ $app->get('/fs/{site}/{url}', function (Request $request, $site, $url) use ($app
   }
 })->assert('url', '.*');
 
-$app->get('/fs/{site}', function (Request $request, $site) use ($app) {
+$app->get('/{site}', function (Request $request, $site) use ($app) {
   if (!isset($app['proxy.sites'][$site])) {
     $app->abort(404, "Site $site does not exist.");
   }
@@ -72,7 +72,7 @@ $app->get('/fs/{site}', function (Request $request, $site) use ($app) {
   }
 });
 
-$app->get('/fs', function (Request $request) use ($app) {
+$app->get('/', function (Request $request) use ($app) {
   $accept = AcceptHeader::fromString($request->headers->get('Accept'));
   if ($accept->has('text/html')) {
     return $app['twig']->render('index.html', array('title' => $app['proxy.title'], 'sites' => $app['proxy.sites']));
@@ -83,10 +83,6 @@ $app->get('/fs', function (Request $request) use ($app) {
   else {
     $app->abort(404, "Unsupported accept header");
   }
-});
-
-$app->get('/', function () use ($app) {
-  return $app->redirect('/fs');
 });
 
 $app->error(function (\Exception $e, $code) use ($app) {
